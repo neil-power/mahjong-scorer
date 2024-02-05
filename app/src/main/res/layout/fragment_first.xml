@@ -2,7 +2,6 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/score_button"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
@@ -49,6 +48,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TableLayout
+            android:id="@+id/tile_selection"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
@@ -60,75 +60,155 @@
             app:layout_constraintTop_toBottomOf="@+id/score_text">
 
             <TableRow
+                android:id="@+id/bamboo_row"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/test1"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:id="@+id/bamboo_1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
                     android:src="@drawable/sou1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_1" />
 
                 <ImageView
-                    android:id="@+id/test2"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:id="@+id/bamboo_2"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitStart"
+                    android:background="@drawable/tile_front"
                     android:src="@drawable/sou1"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_2" />
 
                 <ImageView
-                    android:id="@+id/test3"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:id="@+id/bamboo_3"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
                     android:src="@drawable/sou1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_3" />
 
                 <ImageView
-                    android:id="@+id/test5"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:id="@+id/bamboo_4"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
                     android:src="@drawable/sou1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_4" />
+
+                <ImageView
+                    android:id="@+id/bamboo_5"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_5" />
+
+                <ImageView
+                    android:id="@+id/bamboo_6"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_6" />
+
+                <ImageView
+                    android:id="@+id/bamboo_7"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_7" />
+
+                <ImageView
+                    android:id="@+id/bamboo_8"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_9" />
+
+                <ImageView
+                    android:id="@+id/bamboo_9"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_9" />
+
 
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/test6"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
                     android:adjustViewBounds="true"
                     android:src="@drawable/sou1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/tile_front" />
 
                 <ImageView
                     android:id="@+id/test4"
