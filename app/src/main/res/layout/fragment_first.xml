@@ -194,34 +194,273 @@
             </TableRow>
 
             <TableRow
+                android:id="@+id/circle_row"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/test6"
+                    android:id="@+id/circle_1"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginEnd="2dp"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
                     android:src="@drawable/sou1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textview_first"
-                    app:srcCompat="@drawable/tile_front" />
+                    app:srcCompat="@drawable/circle_1" />
 
                 <ImageView
-                    android:id="@+id/test4"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:id="@+id/circle_2"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/circle_2" />
+
+                <ImageView
+                    android:id="@+id/circle_3"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
                     android:src="@drawable/sou1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/circle_3" />
+
+                <ImageView
+                    android:id="@+id/circle_4"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/circle_4" />
+
+                <ImageView
+                    android:id="@+id/circle_5"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_5" />
+
+                <ImageView
+                    android:id="@+id/circle_6"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_6" />
+
+                <ImageView
+                    android:id="@+id/circle_7"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_7" />
+
+                <ImageView
+                    android:id="@+id/circle_8"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_9" />
+
+                <ImageView
+                    android:id="@+id/circle_9"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_9" />
+
+
             </TableRow>
+
+            <TableRow
+                android:id="@+id/character_row"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/character_1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/character_1" />
+
+                <ImageView
+                    android:id="@+id/character_2"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/character_2" />
+
+                <ImageView
+                    android:id="@+id/character_3"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_3" />
+
+                <ImageView
+                    android:id="@+id/character_4"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_4" />
+
+                <ImageView
+                    android:id="@+id/character_5"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_5" />
+
+                <ImageView
+                    android:id="@+id/character_6"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_6" />
+
+                <ImageView
+                    android:id="@+id/character_7"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_7" />
+
+                <ImageView
+                    android:id="@+id/character_8"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_9" />
+
+                <ImageView
+                    android:id="@+id/character_9"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    android:src="@drawable/sou1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/bamboo_9" />
+
+
+            </TableRow>
+
         </TableLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
