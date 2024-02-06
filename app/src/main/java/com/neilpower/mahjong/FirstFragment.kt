@@ -1,7 +1,6 @@
 package com.neilpower.mahjong
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,16 @@ import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
+import java.util.function.ToDoubleFunction
+import java.util.stream.Stream
+
+//To do
+//breaks with 5+ tiles for kong
+//add pungs
+//add winds and seasons
+
 
 //GLOBAL VARIABLES ---------------------------------------------------------------------------------
 private var selectedTileNumber = 0
@@ -44,7 +51,12 @@ class FirstFragment : Fragment() {
 
         //Calculate score
         binding.calculateScoreButton.setOnClickListener {
-            calculateScore()
+            if (selectedTileList.count() == 11){
+                calculateScore()
+            }else{
+                updateText(R.id.score_text,"Select 11 tiles")
+            }
+
             //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
 
@@ -114,6 +126,8 @@ class FirstFragment : Fragment() {
         //Set score text to 0
         val scoreText = getString(R.string.score, 0)
         updateText(R.id.score_text,scoreText)
+
+        updateTextNewline(R.id.scorerDisplay, "Points scored by:")
     }
 
     //UTILITY FUNCTIONS-----------------------------------------------------------------------------
@@ -137,15 +151,100 @@ class FirstFragment : Fragment() {
         }
     }
 
+    private fun argmax(list: ArrayList<Long>): Int? {
+        //Returns index of max number
+        var max: Long? = null
+        var argmax: Int? = null
+        for (i in 0 until list.count()){
+            val item :Long = list[i]
+            if (max == null || item > max) {
+                max = item
+                argmax = i
+            }
+        }
+        return argmax
+    }
+
+    private fun <T> countUniqueElements(list: MutableList<T>): Map<T, Int> {
+        val elementCountMap = mutableMapOf<T, Int>()
+
+        // Count occurrences of each element in the list
+        for (element in list) {
+            if (elementCountMap.containsKey(element)) {
+                elementCountMap[element] = elementCountMap[element]!! + 1
+            } else {
+                elementCountMap[element] = 1
+            }
+        }
+
+        return elementCountMap
+    }
+
+
+//    private fun <T> countUniqueElements(list: MutableList<T>): Map<T, Pair<Int, MutableList<Int>>> {
+//        val elementCountMap = mutableMapOf<T, Pair<Int, MutableList<Int>>>()
+//
+//        // Count occurrences of each element in the list and record their positions
+//        for ((index, element) in list.withIndex()) {
+//            if (elementCountMap.containsKey(element)) {
+//                val (count, positions) = elementCountMap[element]!!
+//                elementCountMap[element] = Pair(count + 1, positions.apply { add(index) })
+//            } else {
+//                elementCountMap[element] = Pair(1, mutableListOf(index))
+//            }
+//        }
+//        return elementCountMap
+//    }
+
+
     //CALCULATING SCORE FUNCTIONS-------------------------------------------------------------------
     private fun calculateScore() {
+
+        //change so selected tiles are counted up on click
         //Calculates score from array of selected tiles
         var score = 0
 
+
         // Check for kongs
-        score += 1
-        val scorerText = getString(R.string.scorer, "kong","bamboo_2")
-        updateTextNewline(R.id.scorerDisplay,scorerText)
+        var uniqueElementsCount = countUniqueElements(selectedTileList)
+        //List of names, counts
+       // var uniqueTiles = uniqueElementsCount.keys
+        // counts = uniqueElementsCount.values
+
+
+        //CHECK FOR KONGS ------------------------------------------------------
+        //While there are 4 or more of the same tiles
+        while (uniqueElementsCount.values.max()==4) {
+            for (uniqueTile in uniqueElementsCount) { //Run through all tiles
+                if (uniqueTile.value == 4) { //If count is greater than 4
+
+                    score += 4 //Update score and score text
+                    val scorerText = getString(R.string.scorer, "kong", uniqueTile.key)
+                    updateTextNewline(R.id.scorerDisplay, scorerText)
+
+                    //Remove all tiles that are part of a kong
+                    selectedTileList.removeAll(listOf(uniqueTile.key))
+                    uniqueElementsCount = countUniqueElements(selectedTileList)
+                }
+            }
+        }
+
+        //CHECK FOR PUNGS ------------------------------------------------------
+        //While there are 3 or more of the same tiles
+        while (uniqueElementsCount.values.max()==3) {
+            for (uniqueTile in uniqueElementsCount) { //Run through all tiles
+                if (uniqueTile.value == 3) { //If count is greater than 4
+
+                    score += 2 //Update score and score text
+                    val scorerText = getString(R.string.scorer, "pung", uniqueTile.key)
+                    updateTextNewline(R.id.scorerDisplay, scorerText)
+
+                    //Remove all tiles that are part of a kong
+                    selectedTileList.removeAll(listOf(uniqueTile.key))
+                    uniqueElementsCount = countUniqueElements(selectedTileList)
+                }
+            }
+        }
 
 
         //Check for pungs
