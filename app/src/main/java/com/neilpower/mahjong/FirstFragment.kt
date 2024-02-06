@@ -12,15 +12,22 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//breaks with 5+ tiles for kong
-//add winds and seasons
+//5+ tiles for kong doesn't score
+//chow of winds/dragons are currently allowed
+//seasons and flowers
+//wind of the round
+//click to remove
+//terminal multiplier
 
 
 //VARIABLES ---------------------------------------------------------------------------------
 private const val CHOWPOINTS = 0
-private const val KONGPOINTS = 2
-private const val PUNGPOINTS = 4
+private const val KONGPOINTS = 4
+private const val PUNGPOINTS = 2
 private const val MAHJONGPOINTS = 50
+private const val DRAGONMULTIPLIER = 2
+private const val WINDMULTIPLIER = 2
+private const val TERMINALMULTIPLIER = 2 //1s or 9s
 
 private var selectedTileNumber = 0
 private var selectedTileList: MutableList<String> = ArrayList()
@@ -154,6 +161,11 @@ class FirstFragment : Fragment() {
         return str.last().toString().toInt()
     }
 
+    private fun extractSuit(str: String): String {
+        // Extract the string up to _
+        return str.split("_")[0]
+    }
+
     private fun <T> countUniqueElements(list: MutableList<T>): Map<T, Int> {
         val elementCountMap = mutableMapOf<T, Int>()
 
@@ -167,31 +179,6 @@ class FirstFragment : Fragment() {
         }
         return elementCountMap
     }
-
-//    private fun findConsecutiveSets(list: MutableList<String>): List<List<Int>> {
-//        val consecutiveRuns = mutableListOf<List<Int>>()
-//        var startIndex = 0
-//        var endIndex = 0
-//
-//        while (endIndex < list.size) {
-//            // Check if the next two strings form a consecutive run of three numbers
-//            if (endIndex + 2 < list.size &&
-//                extractNumber(list[endIndex]) + 1 == extractNumber(list[endIndex + 1]) &&
-//                extractNumber(list[endIndex]) + 2 == extractNumber(list[endIndex + 2])
-//            ) {
-//                endIndex += 3 // Advance endIndex by 3 to skip the consecutive run
-//            } else {
-//                // If a run of three is found, record it
-//                if (endIndex - startIndex == 2) {
-//                    consecutiveRuns.add((startIndex..endIndex).toList())
-//                }
-//                endIndex++
-//                startIndex = endIndex
-//            }
-//        }
-//
-//        return consecutiveRuns
-//    }
 
     private fun findFirstConsecutiveRun(list: MutableList<String>): List<Int>? {
         var startIndex = 0
@@ -232,7 +219,13 @@ class FirstFragment : Fragment() {
             for (uniqueTile in uniqueElementsCount) { //Run through all tiles
                 if (uniqueTile.value == 4) { //If count is greater than 4
 
-                    score += KONGPOINTS //Update score and score text
+                    if (extractSuit(uniqueTile.key)=="dragon"){
+                        score += KONGPOINTS* DRAGONMULTIPLIER
+                    }else if(extractSuit(uniqueTile.key)=="wind"){
+                        score += KONGPOINTS* WINDMULTIPLIER
+                    }else{
+                        score += KONGPOINTS
+                    }
                     val scorerText = getString(R.string.scorer, "kong", uniqueTile.key)
                     updateTextNewline(R.id.scorerDisplay, scorerText)
 
@@ -249,7 +242,13 @@ class FirstFragment : Fragment() {
             for (uniqueTile in uniqueElementsCount) { //Run through all tiles
                 if (uniqueTile.value == 3) { //If count is greater than 4
 
-                    score += PUNGPOINTS //Update score and score text
+                    if (extractSuit(uniqueTile.key)=="dragon"){
+                        score += PUNGPOINTS* DRAGONMULTIPLIER
+                    }else if(extractSuit(uniqueTile.key)=="wind"){
+                        score += PUNGPOINTS* WINDMULTIPLIER
+                    }else{
+                        score += PUNGPOINTS
+                    }
                     val scorerText = getString(R.string.scorer, "pung", uniqueTile.key)
                     updateTextNewline(R.id.scorerDisplay, scorerText)
 
@@ -270,19 +269,23 @@ class FirstFragment : Fragment() {
             val chowTile = hand.elementAt(firstChow[0])
 
             score += CHOWPOINTS
-            val scorerText = getString(R.string.scorer, "chow", chowTile)
+            val scorerText = getString(R.string.scorer, "chow", extractSuit(chowTile))
             updateTextNewline(R.id.scorerDisplay, scorerText)
 
-            hand.subList(firstChow[0],firstChow[2]).clear() //Remove chow from hand
+            hand.subList(firstChow[0],firstChow[2]+1).clear() //Remove chow from hand
+            //ISSUE WITH MULTIPLE CHOWS?
             hand.sort() //Sort and search again
             firstChow = findFirstConsecutiveRun(hand)
         }
 
         //CHECK FOR FINAL PAIR (MAHJONG) ------------------------------------------------------
+
         if (hand.count()==2 && countUniqueElements(hand).keys.count()==1){
             score += MAHJONGPOINTS
             updateTextNewline(R.id.scorerDisplay, "MAHJONG")
         }
+        updateTextNewline(R.id.scorerDisplay,"Unused tiles:"+ hand.toString())
+
 
         //CHECK FOR ALL 1s, 9s, all same suit -----------------------------------------
 
