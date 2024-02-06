@@ -10,16 +10,18 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
-import java.util.function.ToDoubleFunction
-import java.util.stream.Stream
 
 //To do
 //breaks with 5+ tiles for kong
-//add pungs
 //add winds and seasons
 
 
-//GLOBAL VARIABLES ---------------------------------------------------------------------------------
+//VARIABLES ---------------------------------------------------------------------------------
+private const val CHOWPOINTS = 0
+private const val KONGPOINTS = 2
+private const val PUNGPOINTS = 4
+private const val MAHJONGPOINTS = 50
+
 private var selectedTileNumber = 0
 private var selectedTileList: MutableList<String> = ArrayList()
 
@@ -40,13 +42,9 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         //Set score text to 0
         val scoreText = getString(R.string.score, 0)
         updateText(R.id.score_text,scoreText)
-        //val scoreDisplay: TextView = requireView().findViewById(R.id.score_text)
-
-        //scoreDisplay.text = scoreText
 
 
         //Calculate score
@@ -127,7 +125,7 @@ class FirstFragment : Fragment() {
         val scoreText = getString(R.string.score, 0)
         updateText(R.id.score_text,scoreText)
 
-        updateTextNewline(R.id.scorerDisplay, "Points scored by:")
+        updateText(R.id.scorerDisplay, "Points scored by:")
     }
 
     //UTILITY FUNCTIONS-----------------------------------------------------------------------------
@@ -151,18 +149,9 @@ class FirstFragment : Fragment() {
         }
     }
 
-    private fun argmax(list: ArrayList<Long>): Int? {
-        //Returns index of max number
-        var max: Long? = null
-        var argmax: Int? = null
-        for (i in 0 until list.count()){
-            val item :Long = list[i]
-            if (max == null || item > max) {
-                max = item
-                argmax = i
-            }
-        }
-        return argmax
+    private fun extractNumber(str: String): Int {
+        // Extract the last character and parse it as an integer
+        return str.last().toString().toInt()
     }
 
     private fun <T> countUniqueElements(list: MutableList<T>): Map<T, Int> {
@@ -176,40 +165,65 @@ class FirstFragment : Fragment() {
                 elementCountMap[element] = 1
             }
         }
-
         return elementCountMap
     }
 
-
-//    private fun <T> countUniqueElements(list: MutableList<T>): Map<T, Pair<Int, MutableList<Int>>> {
-//        val elementCountMap = mutableMapOf<T, Pair<Int, MutableList<Int>>>()
+//    private fun findConsecutiveSets(list: MutableList<String>): List<List<Int>> {
+//        val consecutiveRuns = mutableListOf<List<Int>>()
+//        var startIndex = 0
+//        var endIndex = 0
 //
-//        // Count occurrences of each element in the list and record their positions
-//        for ((index, element) in list.withIndex()) {
-//            if (elementCountMap.containsKey(element)) {
-//                val (count, positions) = elementCountMap[element]!!
-//                elementCountMap[element] = Pair(count + 1, positions.apply { add(index) })
+//        while (endIndex < list.size) {
+//            // Check if the next two strings form a consecutive run of three numbers
+//            if (endIndex + 2 < list.size &&
+//                extractNumber(list[endIndex]) + 1 == extractNumber(list[endIndex + 1]) &&
+//                extractNumber(list[endIndex]) + 2 == extractNumber(list[endIndex + 2])
+//            ) {
+//                endIndex += 3 // Advance endIndex by 3 to skip the consecutive run
 //            } else {
-//                elementCountMap[element] = Pair(1, mutableListOf(index))
+//                // If a run of three is found, record it
+//                if (endIndex - startIndex == 2) {
+//                    consecutiveRuns.add((startIndex..endIndex).toList())
+//                }
+//                endIndex++
+//                startIndex = endIndex
 //            }
 //        }
-//        return elementCountMap
+//
+//        return consecutiveRuns
 //    }
 
+    private fun findFirstConsecutiveRun(list: MutableList<String>): List<Int>? {
+        var startIndex = 0
+        var endIndex = 0
+
+        while (endIndex < list.size) {
+            // Check if the next two strings form a consecutive run of three numbers
+            if (endIndex + 2 < list.size &&
+                extractNumber(list[endIndex]) + 1 == extractNumber(list[endIndex + 1]) &&
+                extractNumber(list[endIndex]) + 2 == extractNumber(list[endIndex + 2])
+            ) {
+                return (startIndex..endIndex + 2).toList()
+            } else {
+                // Move to the next index
+                endIndex++
+                startIndex = endIndex
+            }
+        }
+
+        return null // No consecutive run of three found
+    }
 
     //CALCULATING SCORE FUNCTIONS-------------------------------------------------------------------
     private fun calculateScore() {
-
-        //change so selected tiles are counted up on click
         //Calculates score from array of selected tiles
         var score = 0
+        var multiplier = 0
+        //Reset score breakdown
+        updateText(R.id.scorerDisplay, "Points scored by:")
 
-
-        // Check for kongs
-        var uniqueElementsCount = countUniqueElements(selectedTileList)
-        //List of names, counts
-       // var uniqueTiles = uniqueElementsCount.keys
-        // counts = uniqueElementsCount.values
+        val hand = selectedTileList.toMutableList() //Create copy of selected tile list for scoring
+        var uniqueElementsCount = countUniqueElements(hand) //Count unique elements
 
 
         //CHECK FOR KONGS ------------------------------------------------------
@@ -218,13 +232,13 @@ class FirstFragment : Fragment() {
             for (uniqueTile in uniqueElementsCount) { //Run through all tiles
                 if (uniqueTile.value == 4) { //If count is greater than 4
 
-                    score += 4 //Update score and score text
+                    score += KONGPOINTS //Update score and score text
                     val scorerText = getString(R.string.scorer, "kong", uniqueTile.key)
                     updateTextNewline(R.id.scorerDisplay, scorerText)
 
                     //Remove all tiles that are part of a kong
-                    selectedTileList.removeAll(listOf(uniqueTile.key))
-                    uniqueElementsCount = countUniqueElements(selectedTileList)
+                    hand.removeAll(listOf(uniqueTile.key))
+                    uniqueElementsCount = countUniqueElements(hand)
                 }
             }
         }
@@ -235,25 +249,48 @@ class FirstFragment : Fragment() {
             for (uniqueTile in uniqueElementsCount) { //Run through all tiles
                 if (uniqueTile.value == 3) { //If count is greater than 4
 
-                    score += 2 //Update score and score text
+                    score += PUNGPOINTS //Update score and score text
                     val scorerText = getString(R.string.scorer, "pung", uniqueTile.key)
                     updateTextNewline(R.id.scorerDisplay, scorerText)
 
                     //Remove all tiles that are part of a kong
-                    selectedTileList.removeAll(listOf(uniqueTile.key))
-                    uniqueElementsCount = countUniqueElements(selectedTileList)
+                    hand.removeAll(listOf(uniqueTile.key))
+                    uniqueElementsCount = countUniqueElements(hand)
                 }
             }
         }
 
 
-        //Check for pungs
+        //CHECK FOR CHOWS ------------------------------------------------------
 
-        //
+        hand.sort() //Sort hand
+        var firstChow = findFirstConsecutiveRun(hand) //Get indexes of chows
 
-        val scoreDisplay: TextView = requireView().findViewById(R.id.score_text)
+        while (firstChow != null) {
+            val chowTile = hand.elementAt(firstChow[0])
+
+            score += CHOWPOINTS
+            val scorerText = getString(R.string.scorer, "chow", chowTile)
+            updateTextNewline(R.id.scorerDisplay, scorerText)
+
+            hand.subList(firstChow[0],firstChow[2]).clear() //Remove chow from hand
+            hand.sort() //Sort and search again
+            firstChow = findFirstConsecutiveRun(hand)
+        }
+
+        //CHECK FOR FINAL PAIR (MAHJONG) ------------------------------------------------------
+        if (hand.count()==2 && countUniqueElements(hand).keys.count()==1){
+            score += MAHJONGPOINTS
+            updateTextNewline(R.id.scorerDisplay, "MAHJONG")
+        }
+
+        //CHECK FOR ALL 1s, 9s, all same suit -----------------------------------------
+
+        //CHECK FOR MATCHING WINDS, FLOWERS, SEASONS -----------------------------------------
+
+        //Update score
         val scoreText = getString(R.string.score, score)
-        scoreDisplay.text = scoreText
+        updateText(R.id.score_text,scoreText)
     }
 
 
