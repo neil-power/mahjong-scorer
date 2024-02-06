@@ -12,38 +12,40 @@ import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
-
+//GLOBAL VARIABLES ---------------------------------------------------------------------------------
 private var selectedTileNumber = 0
 private var selectedTileList: MutableList<String> = ArrayList()
 
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+//INITIALISATION FUNCTIONS----------------------------------------------------------------------
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
+        //Set up binding on creation
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
+        //Set score text to 0
+        val scoreText = getString(R.string.score, 0)
+        updateText(R.id.score_text,scoreText)
+        //val scoreDisplay: TextView = requireView().findViewById(R.id.score_text)
+
+        //scoreDisplay.text = scoreText
+
+
         //Calculate score
         binding.calculateScoreButton.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            calculateScore()
+            //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
 
         // Reset everything
@@ -64,16 +66,12 @@ class FirstFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        clearAll()
         super.onDestroyView()
         _binding = null
     }
 
-//    private fun getTileById(tileId: Int): ImageView {
-//        val selectionTable: TableLayout? = view?.findViewById(R.id.selected_tiles)
-//        val row: TableRow = selectionTable?.getChildAt(0) as TableRow
-//        return row.getChildAt(tileId) as ImageView
-//    }
-
+    //EVENT FUNCTIONS-------------------------------------------------------------------------------
     private fun updateSelected(tileClicked: ImageView) {
         //Update tileToUpdate with image of tile clicked
 
@@ -90,17 +88,8 @@ class FirstFragment : Fragment() {
             val clickedTileName = resources.getResourceEntryName(clickedTileId)
             selectedTileList.add(clickedTileName)
 
-            val selectedDisplay: TextView = requireView().findViewById(R.id.selectionDisplay)
-
-            //<string name="welcome_messages">Hello, %1$s! You have %2$d new messages.</string>
-            val selectedTileText = getString(R.string.concatenated_newline, selectedDisplay.text, clickedTileName)
-            selectedDisplay.text = selectedTileText
-        }
-    }
-
-    private fun setClickListenerForImage(imageView: ImageView) {
-        imageView.setOnClickListener {
-            updateSelected(imageView)
+            //Add name of clicked tile to selection display
+            updateTextNewline(R.id.selectionDisplay,clickedTileName)
         }
     }
 
@@ -115,12 +104,57 @@ class FirstFragment : Fragment() {
             tileToClear.setBackgroundResource(R.drawable.tile_front)
         }
 
-        //Reset selected tile count to 0
+        //Reset selected tile count to 0, clear list of selected tiles
         selectedTileNumber = 0
+        selectedTileList.clear()
 
-        val selectedDisplay: TextView = requireView().findViewById(R.id.selectionDisplay)
-        selectedDisplay.text = "Selected Tiles:"
+        //Reset selected tiles list
+        updateText(R.id.selectionDisplay,"Selected Tiles:" )
 
+        //Set score text to 0
+        val scoreText = getString(R.string.score, 0)
+        updateText(R.id.score_text,scoreText)
+    }
+
+    //UTILITY FUNCTIONS-----------------------------------------------------------------------------
+    private fun updateText(textID: Int, newText: String){
+        //Replaces text in textbox
+        val textview: TextView = requireView().findViewById(textID)
+        textview.text = newText
+    }
+
+    private fun updateTextNewline(textID: Int, newTextLine: String){
+        //Appends text in textbox
+        val textview: TextView = requireView().findViewById(textID)
+        val newText  = getString(R.string.concatenated_newline, textview.text, newTextLine)
+        textview.text = newText
+    }
+
+    private fun setClickListenerForImage(imageView: ImageView) {
+        //Set listener for a view
+        imageView.setOnClickListener {
+            updateSelected(imageView)
+        }
+    }
+
+    //CALCULATING SCORE FUNCTIONS-------------------------------------------------------------------
+    private fun calculateScore() {
+        //Calculates score from array of selected tiles
+        var score = 0
+
+        // Check for kongs
+        score += 1
+        val scorerText = getString(R.string.scorer, "kong","bamboo_2")
+        updateTextNewline(R.id.scorerDisplay,scorerText)
+
+
+        //Check for pungs
+
+        //
+
+        val scoreDisplay: TextView = requireView().findViewById(R.id.score_text)
+        val scoreText = getString(R.string.score, score)
+        scoreDisplay.text = scoreText
     }
 
 
