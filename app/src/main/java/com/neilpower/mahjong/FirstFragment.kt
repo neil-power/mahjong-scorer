@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -13,8 +15,8 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//seasons and flowers
 //wind of the round
+//seasons and flowers
 //Add text to tiles
 //set loop to fill table with tiles (last)
 //Issue with multiple chows of same suit - sorting issue (eg bamboo_1, bamboo_1, bamboo_2 ...)
@@ -31,7 +33,7 @@ private const val MAHJONGPOINTS = 50
 private const val DRAGONMULTIPLIER = 2
 private const val WINDMULTIPLIER = 2
 private const val TERMINALMULTIPLIER = 2 //1s or 9s
-private const val SAMEWINDMULTIPLIER = 2
+private const val WINDPLAYERMULTIPLIER = 2
 private const val WINDROUNDMULTIPLIER = 2
 private const val SAMESEASONMULTIPLIER = 2
 private const val SAMEFLOWERMULTIPLIER = 2
@@ -59,7 +61,6 @@ class FirstFragment : Fragment() {
         //Set score text to 0
         val scoreText = getString(R.string.score, 0)
         updateText(R.id.score_text, scoreText)
-
 
         //Calculate score
         binding.calculateScoreButton.setOnClickListener {
@@ -182,6 +183,19 @@ class FirstFragment : Fragment() {
         updateText(R.id.score_text,scoreText)
 
         updateText(R.id.scorerDisplay, "Points scored by:")
+
+        //Reset winds - necessary?
+        val roundCheck: RadioGroup = requireView().findViewById(R.id.wind_round)
+        for (i in 1 until roundCheck.childCount) { //Note 1 to avoid textview
+            val radioButton = roundCheck.getChildAt(i) as RadioButton
+            radioButton.isChecked = false
+        }
+
+        val playerCheck: RadioGroup = requireView().findViewById(R.id.wind_player)
+        for (i in 1 until playerCheck.childCount) { //Note 1 to avoid textview
+            val radioButton = playerCheck.getChildAt(i) as RadioButton
+            radioButton.isChecked = false
+        }
     }
 
     //UTILITY FUNCTIONS-----------------------------------------------------------------------------
@@ -271,6 +285,11 @@ class FirstFragment : Fragment() {
         val hand = selectedTileList.toMutableList() //Create copy of selected tile list for scoring
         var uniqueElementsCount = countUniqueElements(hand) //Count unique elements
 
+        val roundCheck: RadioGroup = requireView().findViewById(R.id.wind_round)
+        val windOfRound = extractNumber(resources.getResourceEntryName(roundCheck.checkedRadioButtonId))
+
+        val playerCheck: RadioGroup = requireView().findViewById(R.id.wind_player)
+        val windOfPlayer = extractNumber(resources.getResourceEntryName(playerCheck.checkedRadioButtonId))
 
         //CHECK FOR KONGS ------------------------------------------------------
         //While there are 4 or more of the same tiles
@@ -280,10 +299,21 @@ class FirstFragment : Fragment() {
 
                     score += if (extractSuit(uniqueTile.key)=="dragon"){
                         KONGPOINTS* DRAGONMULTIPLIER //KONG OF DRAGON
+
                     }else if(extractSuit(uniqueTile.key)=="wind"){
-                        KONGPOINTS* WINDMULTIPLIER //KONG OF WIND
+                        if ( (extractNumber(uniqueTile.key) == windOfRound) && (extractNumber(uniqueTile.key) == windOfPlayer)) {
+                                KONGPOINTS * WINDMULTIPLIER * WINDROUNDMULTIPLIER * WINDPLAYERMULTIPLIER //KONG OF PLAYER'S WIND OF ROUND
+                            }else if(extractNumber(uniqueTile.key) == windOfRound){
+                                KONGPOINTS * WINDMULTIPLIER * WINDROUNDMULTIPLIER //KONG OF WIND OF ROUND
+                            }else if(extractNumber(uniqueTile.key) == windOfPlayer){
+                                KONGPOINTS * WINDMULTIPLIER * WINDPLAYERMULTIPLIER //KONG OF PLAYER'S WIND
+                            }else{
+                                KONGPOINTS* WINDMULTIPLIER //KONG OF WIND
+                        }
+
                     }else if(extractNumber(uniqueTile.key)== 1 || extractNumber(uniqueTile.key)==9){
                         KONGPOINTS* TERMINALMULTIPLIER //TERMINAL KONG
+
                     }else{
                         KONGPOINTS //STANDARD KONG
                     }
@@ -306,7 +336,15 @@ class FirstFragment : Fragment() {
                     score += if (extractSuit(uniqueTile.key)=="dragon"){
                         PUNGPOINTS* DRAGONMULTIPLIER //PUNG OF DRAGON
                     }else if(extractSuit(uniqueTile.key)=="wind"){
-                        PUNGPOINTS* WINDMULTIPLIER //PUNG OF WIND
+                        if ( (extractNumber(uniqueTile.key) == windOfRound) && (extractNumber(uniqueTile.key) == windOfPlayer)) {
+                            PUNGPOINTS * WINDMULTIPLIER * WINDROUNDMULTIPLIER * WINDPLAYERMULTIPLIER //PUNG OF PLAYER'S WIND OF ROUND
+                        }else if(extractNumber(uniqueTile.key) == windOfRound){
+                            PUNGPOINTS * WINDMULTIPLIER * WINDROUNDMULTIPLIER //PUNG OF WIND OF ROUND
+                        }else if(extractNumber(uniqueTile.key) == windOfPlayer){
+                            PUNGPOINTS * WINDMULTIPLIER * WINDPLAYERMULTIPLIER //PUNG OF PLAYER'S WIND
+                        }else{
+                            PUNGPOINTS* WINDMULTIPLIER //PUNG OF WIND
+                        }
                     }else if(extractNumber(uniqueTile.key)== 1 || extractNumber(uniqueTile.key)==9){
                         PUNGPOINTS* TERMINALMULTIPLIER //TERMINAL PUNG
                     }else{
