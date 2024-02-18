@@ -20,6 +20,9 @@ import com.neilpower.mahjong.databinding.FragmentFirstBinding
 //Add text to tiles
 //set loop to fill table with tiles (last)
 //Issue with multiple chows of same suit - sorting issue (eg bamboo_1, bamboo_1, bamboo_2 ...)
+//Issue when clicking on empty tile
+//Issue when calculating score if no winds are clicked
+//Weird issue with winds being added
 
 
 //VARIABLES ---------------------------------------------------------------------------------
@@ -278,7 +281,6 @@ class FirstFragment : Fragment() {
     private fun calculateScore() {
         //Calculates score from array of selected tiles
         var score = 0
-        var multiplier = 0
         //Reset score breakdown
         updateText(R.id.scorerDisplay, "Points scored by:")
 

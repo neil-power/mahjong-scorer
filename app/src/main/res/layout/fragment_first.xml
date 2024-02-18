@@ -75,7 +75,8 @@
             <TableRow
                 android:id="@+id/selected_row"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/selected_1"
@@ -226,9 +227,121 @@
             app:layout_constraintTop_toBottomOf="@id/selected_tiles">
 
             <TableRow
+                android:id="@+id/season_flower_row"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/season_1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/season_1" />
+
+                <ImageView
+                    android:id="@+id/season_2"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/season_2" />
+
+                <ImageView
+                    android:id="@+id/season_3"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/season_3" />
+
+                <ImageView
+                    android:id="@+id/season_4"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/season_4" />
+
+                <ImageView
+                    android:id="@+id/flower_1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/flower_1" />
+
+                <ImageView
+                    android:id="@+id/flower_2"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/flower_2" />
+
+                <ImageView
+                    android:id="@+id/flower_3"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/flower_3" />
+
+                <ImageView
+                    android:id="@+id/flower_4"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/tile_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textview_first"
+                    app:srcCompat="@drawable/flower_4" />
+
+            </TableRow>
+
+            <TableRow
                 android:id="@+id/bamboo_row"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/bamboo_1"
@@ -353,7 +466,8 @@
             <TableRow
                 android:id="@+id/circle_row"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/circle_1"
@@ -478,7 +592,8 @@
             <TableRow
                 android:id="@+id/character_row"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/character_1"
@@ -600,9 +715,10 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/specials_row"
+                android:id="@+id/dragon_wind_row"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/dragon_1"
