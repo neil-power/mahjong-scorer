@@ -13,8 +13,6 @@ import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
 //Prevent user adding 5+ of the same tile
-//chow of winds/dragons are currently allowed
-//Add terminal multiplier
 //seasons and flowers
 //wind of the round
 //click to remove
@@ -197,18 +195,13 @@ class FirstFragment : Fragment() {
 
         while (endIndex < list.size) {
             // Check if the next two strings form a consecutive run of three numbers
-            if (endIndex + 2 < list.size) { //If not at end of list
-                if (extractNumber(list[endIndex]) + 1 == extractNumber(list[endIndex + 1]) &&
-                    extractNumber(list[endIndex]) + 2 == extractNumber(list[endIndex + 2]) //If consecutive run
-                ) {
-                    if (extractSuit(list[endIndex]) != "dragon" && extractSuit(list[endIndex]) != "wind") { //If chow is not of dragon or wind
-                        return (startIndex..endIndex + 2).toList()
-                    }
-                } else {
-                    // Move to the next index
-                    endIndex++
-                    startIndex = endIndex
-                }
+            if ( (endIndex + 2 < list.size) &&
+                (extractNumber(list[endIndex]) + 1 == extractNumber(list[endIndex + 1])) &&
+                (extractNumber(list[endIndex]) + 2 == extractNumber(list[endIndex + 2])) &&
+                (extractSuit(list[endIndex]) != "dragon") &&
+                (extractSuit(list[endIndex]) != "wind")) { //If chow is not of dragon or wind
+                return (startIndex..endIndex + 2).toList()
+
             } else {
                 // Move to the next index
                 endIndex++
