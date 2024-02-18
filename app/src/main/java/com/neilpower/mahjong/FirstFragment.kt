@@ -1,5 +1,6 @@
 package com.neilpower.mahjong
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +13,11 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//click to remove
 //seasons and flowers
 //wind of the round
-//set loop to fill table with tiles (last)
 //Add text to tiles
+//set loop to fill table with tiles (last)
+//Issue with multiple chows of same suit - sorting issue (eg bamboo_1, bamboo_1, bamboo_2 ...)
 
 
 //VARIABLES ---------------------------------------------------------------------------------
@@ -57,18 +58,16 @@ class FirstFragment : Fragment() {
 
         //Set score text to 0
         val scoreText = getString(R.string.score, 0)
-        updateText(R.id.score_text,scoreText)
+        updateText(R.id.score_text, scoreText)
 
 
         //Calculate score
         binding.calculateScoreButton.setOnClickListener {
-            if (selectedTileList.count() == 11){
+            if (selectedTileList.count() == 11) {
                 calculateScore()
-            }else{
-                updateText(R.id.score_text,"Select 11 tiles")
+            } else {
+                updateText(R.id.score_text, "Select 11 tiles")
             }
-
-            //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
 
         // Reset everything
@@ -83,9 +82,18 @@ class FirstFragment : Fragment() {
             val tileRow = tileTable.getChildAt(i) as TableRow
             for (j in 0 until tileRow.childCount) {
                 val imageView = tileRow.getChildAt(j) as ImageView
-                setClickListenerForImage(imageView)
+                setAddClickListener(imageView)
             }
         }
+
+
+        //Loop through all buttons in selected tile selection table and set event listeners
+        val selectedTileRow: TableRow = view.findViewById(R.id.selected_row)
+        for (i in 0 until selectedTileRow.childCount) {
+            val imageView = selectedTileRow.getChildAt(i) as ImageView
+            setRemoveClickListener(imageView)
+        }
+
     }
 
     override fun onDestroyView() {
@@ -95,7 +103,7 @@ class FirstFragment : Fragment() {
     }
 
     //EVENT FUNCTIONS-------------------------------------------------------------------------------
-    private fun updateSelected(tileClicked: ImageView) {
+    private fun selectTile(tileClicked: ImageView) {
         //Update tileToUpdate with image of tile clicked
 
         val selectedTileRow: TableRow = requireView().findViewById(R.id.selected_row)
@@ -117,10 +125,39 @@ class FirstFragment : Fragment() {
                 selectedTileList.add(clickedTileName)
 
                 //Add name of clicked tile to selection display
-                updateTextNewline(R.id.selectionDisplay, clickedTileName)
+                updateText(R.id.selectionDisplay,"Selected tiles:" + selectedTileList.toString())
             }
         }
     }
+
+    private fun removeTile(tileClicked: ImageView) {
+        //Remove tile from selection when clicked
+        val clickedTileId = tileClicked.id
+        val clickedTileName = resources.getResourceEntryName(clickedTileId)
+        val clickedTileNumber = extractNumber(clickedTileName)
+        val selectedTileRow: TableRow = requireView().findViewById(R.id.selected_row)
+
+        //Remove tile from selectedList
+        selectedTileList.removeAt(clickedTileNumber-1)
+        selectedTileNumber -= 1
+
+        //Shuffle all imageviews to right of clicked tile back
+        for (i in clickedTileNumber - 1 until  selectedTileRow.childCount - 1) {
+            val imageView: ImageView = selectedTileRow.getChildAt(i) as ImageView
+            val nextImageView: ImageView = selectedTileRow.getChildAt(i + 1) as ImageView
+
+            val drawable: Drawable? = nextImageView.drawable
+            imageView.setImageDrawable(drawable)
+        }
+
+        val finalTile = selectedTileRow.getChildAt(selectedTileRow.childCount-1) as ImageView
+        finalTile.setImageResource(R.drawable.tile_front)
+        finalTile.setBackgroundResource(R.drawable.tile_front)
+
+        //Add name of clicked tile to selection display
+        updateText(R.id.selectionDisplay,"Selected tiles:" + selectedTileList.toString())
+    }
+
 
     private fun clearAll(){
         //Clear all
@@ -161,10 +198,18 @@ class FirstFragment : Fragment() {
         textview.text = newText
     }
 
-    private fun setClickListenerForImage(imageView: ImageView) {
+    private fun setAddClickListener(imageView: ImageView) {
+
         //Set listener for a view
         imageView.setOnClickListener {
-            updateSelected(imageView)
+            selectTile(imageView)
+        }
+    }
+
+    private fun setRemoveClickListener(imageView: ImageView) {
+        //Set listener for a view
+        imageView.setOnClickListener {
+            removeTile(imageView)
         }
     }
 
