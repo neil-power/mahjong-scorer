@@ -12,12 +12,9 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//Prevent user adding 5+ of the same tile
+//click to remove
 //seasons and flowers
 //wind of the round
-//click to remove
-//terminal multiplier
-//pairs shown as unused
 //set loop to fill table with tiles (last)
 //Add text to tiles
 
@@ -28,15 +25,15 @@ private const val PUNGPOINTS = 2
 private const val KONGPOINTS = 4
 private const val SEASONPOINTS = 4
 private const val FLOWERPOINTS = 4
-
 private const val MAHJONGPOINTS = 50
+
 private const val DRAGONMULTIPLIER = 2
 private const val WINDMULTIPLIER = 2
 private const val TERMINALMULTIPLIER = 2 //1s or 9s
-private const val SAMESEASONMULTIPLIER = 2
-private const val SAMEFLOWERMULTIPLIER = 2
 private const val SAMEWINDMULTIPLIER = 2
 private const val WINDROUNDMULTIPLIER = 2
+private const val SAMESEASONMULTIPLIER = 2
+private const val SAMEFLOWERMULTIPLIER = 2
 
 private var selectedTileNumber = 0
 private var selectedTileList: MutableList<String> = ArrayList()
@@ -104,18 +101,24 @@ class FirstFragment : Fragment() {
         val selectedTileRow: TableRow = requireView().findViewById(R.id.selected_row)
 
         if (selectedTileNumber < selectedTileRow.childCount) {
-            val tileToUpdate: ImageView = selectedTileRow.getChildAt(selectedTileNumber) as ImageView
-            tileToUpdate.setImageDrawable(tileClicked.drawable)
-            tileToUpdate.setBackgroundResource(R.drawable.tile_front)
-
-            selectedTileNumber += 1
-
             val clickedTileId = tileClicked.id
             val clickedTileName = resources.getResourceEntryName(clickedTileId)
-            selectedTileList.add(clickedTileName)
 
-            //Add name of clicked tile to selection display
-            updateTextNewline(R.id.selectionDisplay,clickedTileName)
+            val numAlreadySelected = selectedTileList.count{it == clickedTileName}
+
+            if (numAlreadySelected <= 3) {
+                //Check selectedTileList for 4 counts of tile clicked (later add seasons/flowers)
+
+                val tileToUpdate: ImageView = selectedTileRow.getChildAt(selectedTileNumber) as ImageView
+                tileToUpdate.setImageDrawable(tileClicked.drawable)
+                tileToUpdate.setBackgroundResource(R.drawable.tile_front)
+
+                selectedTileNumber += 1
+                selectedTileList.add(clickedTileName)
+
+                //Add name of clicked tile to selection display
+                updateTextNewline(R.id.selectionDisplay, clickedTileName)
+            }
         }
     }
 
@@ -296,9 +299,17 @@ class FirstFragment : Fragment() {
         //CHECK FOR FINAL PAIR (MAHJONG) ------------------------------------------------------
 
         if (hand.count()==2 && countUniqueElements(hand).keys.count()==1){
+            val pairTile = hand[0]
+            val scorerText = getString(R.string.scorer, "pair", pairTile)
+            updateTextNewline(R.id.scorerDisplay, scorerText)
+
             score += MAHJONGPOINTS
             updateTextNewline(R.id.scorerDisplay, "MAHJONG")
+
+            hand.clear()
+
         }
+
         updateTextNewline(R.id.scorerDisplay,"Unused tiles:"+ hand.toString())
 
 
