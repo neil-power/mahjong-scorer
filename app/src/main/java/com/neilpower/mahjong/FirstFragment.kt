@@ -12,22 +12,33 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//5+ tiles for kong doesn't score
+//Prevent user adding 5+ of the same tile
 //chow of winds/dragons are currently allowed
+//Add terminal multiplier
 //seasons and flowers
 //wind of the round
 //click to remove
 //terminal multiplier
+//pairs shown as unused
+//set loop to fill table with tiles (last)
+//Add text to tiles
 
 
 //VARIABLES ---------------------------------------------------------------------------------
 private const val CHOWPOINTS = 0
-private const val KONGPOINTS = 4
 private const val PUNGPOINTS = 2
+private const val KONGPOINTS = 4
+private const val SEASONPOINTS = 4
+private const val FLOWERPOINTS = 4
+
 private const val MAHJONGPOINTS = 50
 private const val DRAGONMULTIPLIER = 2
 private const val WINDMULTIPLIER = 2
 private const val TERMINALMULTIPLIER = 2 //1s or 9s
+private const val SAMESEASONMULTIPLIER = 2
+private const val SAMEFLOWERMULTIPLIER = 2
+private const val SAMEWINDMULTIPLIER = 2
+private const val WINDROUNDMULTIPLIER = 2
 
 private var selectedTileNumber = 0
 private var selectedTileList: MutableList<String> = ArrayList()
@@ -186,11 +197,18 @@ class FirstFragment : Fragment() {
 
         while (endIndex < list.size) {
             // Check if the next two strings form a consecutive run of three numbers
-            if (endIndex + 2 < list.size &&
-                extractNumber(list[endIndex]) + 1 == extractNumber(list[endIndex + 1]) &&
-                extractNumber(list[endIndex]) + 2 == extractNumber(list[endIndex + 2])
-            ) {
-                return (startIndex..endIndex + 2).toList()
+            if (endIndex + 2 < list.size) { //If not at end of list
+                if (extractNumber(list[endIndex]) + 1 == extractNumber(list[endIndex + 1]) &&
+                    extractNumber(list[endIndex]) + 2 == extractNumber(list[endIndex + 2]) //If consecutive run
+                ) {
+                    if (extractSuit(list[endIndex]) != "dragon" && extractSuit(list[endIndex]) != "wind") { //If chow is not of dragon or wind
+                        return (startIndex..endIndex + 2).toList()
+                    }
+                } else {
+                    // Move to the next index
+                    endIndex++
+                    startIndex = endIndex
+                }
             } else {
                 // Move to the next index
                 endIndex++
@@ -219,12 +237,14 @@ class FirstFragment : Fragment() {
             for (uniqueTile in uniqueElementsCount) { //Run through all tiles
                 if (uniqueTile.value == 4) { //If count is greater than 4
 
-                    if (extractSuit(uniqueTile.key)=="dragon"){
-                        score += KONGPOINTS* DRAGONMULTIPLIER
+                    score += if (extractSuit(uniqueTile.key)=="dragon"){
+                        KONGPOINTS* DRAGONMULTIPLIER //KONG OF DRAGON
                     }else if(extractSuit(uniqueTile.key)=="wind"){
-                        score += KONGPOINTS* WINDMULTIPLIER
+                        KONGPOINTS* WINDMULTIPLIER //KONG OF WIND
+                    }else if(extractNumber(uniqueTile.key)== 1 || extractNumber(uniqueTile.key)==9){
+                        KONGPOINTS* TERMINALMULTIPLIER //TERMINAL KONG
                     }else{
-                        score += KONGPOINTS
+                        KONGPOINTS //STANDARD KONG
                     }
                     val scorerText = getString(R.string.scorer, "kong", uniqueTile.key)
                     updateTextNewline(R.id.scorerDisplay, scorerText)
@@ -242,12 +262,14 @@ class FirstFragment : Fragment() {
             for (uniqueTile in uniqueElementsCount) { //Run through all tiles
                 if (uniqueTile.value == 3) { //If count is greater than 4
 
-                    if (extractSuit(uniqueTile.key)=="dragon"){
-                        score += PUNGPOINTS* DRAGONMULTIPLIER
+                    score += if (extractSuit(uniqueTile.key)=="dragon"){
+                        PUNGPOINTS* DRAGONMULTIPLIER //PUNG OF DRAGON
                     }else if(extractSuit(uniqueTile.key)=="wind"){
-                        score += PUNGPOINTS* WINDMULTIPLIER
+                        PUNGPOINTS* WINDMULTIPLIER //PUNG OF WIND
+                    }else if(extractNumber(uniqueTile.key)== 1 || extractNumber(uniqueTile.key)==9){
+                        PUNGPOINTS* TERMINALMULTIPLIER //TERMINAL PUNG
                     }else{
-                        score += PUNGPOINTS
+                        PUNGPOINTS //STANDARD PUNG
                     }
                     val scorerText = getString(R.string.scorer, "pung", uniqueTile.key)
                     updateTextNewline(R.id.scorerDisplay, scorerText)
