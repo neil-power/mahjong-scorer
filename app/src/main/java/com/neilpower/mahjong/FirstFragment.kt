@@ -15,14 +15,15 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//wind of the round
-//seasons and flowers
+//Update selection
 //Add text to tiles
 //set loop to fill table with tiles (last)
+
+//Issues
+//Clear doesn't clear selected flowers or seasons
 //Issue with multiple chows of same suit - sorting issue (eg bamboo_1, bamboo_1, bamboo_2 ...)
 //Issue when clicking on empty tile
 //Issue when calculating score if no winds are clicked
-//Weird issue with winds being added
 
 
 //VARIABLES ---------------------------------------------------------------------------------
@@ -43,6 +44,7 @@ private const val SAMEFLOWERMULTIPLIER = 2
 
 private var selectedTileNumber = 0
 private var selectedTileList: MutableList<String> = ArrayList()
+private var flowerSeasonList: MutableList<String> = ArrayList()
 
 class FirstFragment : Fragment() {
 
@@ -84,10 +86,18 @@ class FirstFragment : Fragment() {
 
         for (i in 0 until tileTable.childCount) {
             val tileRow = tileTable.getChildAt(i) as TableRow
-            for (j in 0 until tileRow.childCount) {
-                val imageView = tileRow.getChildAt(j) as ImageView
-                setAddClickListener(imageView)
+            if (i==0){
+                for (j in 0 until tileRow.childCount) { //Ignore season and flower row
+                    val imageView = tileRow.getChildAt(j) as ImageView
+                    setFlowerSeasonClickListener(imageView)
+                }
+            }else{
+                for (j in 0 until tileRow.childCount) {
+                    val imageView = tileRow.getChildAt(j) as ImageView
+                    setAddClickListener(imageView)
+                }
             }
+
         }
 
 
@@ -116,10 +126,14 @@ class FirstFragment : Fragment() {
             val clickedTileId = tileClicked.id
             val clickedTileName = resources.getResourceEntryName(clickedTileId)
 
+            //Check selectedTileList for counts of tile clicked
             val numAlreadySelected = selectedTileList.count{it == clickedTileName}
 
-            if (numAlreadySelected <= 3) {
-                //Check selectedTileList for 4 counts of tile clicked (later add seasons/flowers)
+            if ( (extractSuit(clickedTileName)=="flower" && numAlreadySelected ==0) || //Only same flower
+                (extractSuit(clickedTileName)=="season" && numAlreadySelected ==0) || //Only same season
+                ( (extractSuit(clickedTileName)!="flower" && (extractSuit(clickedTileName)!="season") && (numAlreadySelected <= 3) ) )){ //Max 4 of others
+
+
 
                 val tileToUpdate: ImageView = selectedTileRow.getChildAt(selectedTileNumber) as ImageView
                 tileToUpdate.setImageDrawable(tileClicked.drawable)
@@ -162,6 +176,23 @@ class FirstFragment : Fragment() {
         updateText(R.id.selectionDisplay,"Selected tiles:" + selectedTileList.toString())
     }
 
+    private fun selectFlowerSeason(tileClicked: ImageView){
+        val clickedTileId = tileClicked.id
+        val clickedTileName = resources.getResourceEntryName(clickedTileId)
+
+        val numAlreadySelected = flowerSeasonList.count{it == clickedTileName}
+
+        if (numAlreadySelected == 0){ //if tile is already selected
+            //highlight tile
+            tileClicked.setBackgroundResource(R.drawable.tile_front_border)
+            flowerSeasonList.add(clickedTileName) //add to list
+        }else{
+            //deselect tile
+            tileClicked.setBackgroundResource(R.drawable.tile_front)
+            flowerSeasonList.remove(clickedTileName)
+            //remove from list
+        }
+    }
 
     private fun clearAll(){
         //Clear all
@@ -177,6 +208,15 @@ class FirstFragment : Fragment() {
         //Reset selected tile count to 0, clear list of selected tiles
         selectedTileNumber = 0
         selectedTileList.clear()
+
+        //Reset all flower/season tiles
+        val tileTable: TableLayout = requireView().findViewById(R.id.tile_selection)
+        val flowerSeasonRow = tileTable.getChildAt(0) as TableRow
+        for (i in 0 until flowerSeasonRow.childCount) {
+            val tileToClear = selectedTileRow.getChildAt(i) as ImageView
+            tileToClear.setBackgroundResource(R.drawable.tile_front)
+        }
+        flowerSeasonList.clear()
 
         //Reset selected tiles list
         updateText(R.id.selectionDisplay,"Selected Tiles:" )
@@ -220,6 +260,14 @@ class FirstFragment : Fragment() {
         //Set listener for a view
         imageView.setOnClickListener {
             selectTile(imageView)
+        }
+    }
+
+    private fun setFlowerSeasonClickListener(imageView: ImageView) {
+
+        //Set listener for a view
+        imageView.setOnClickListener {
+            selectFlowerSeason(imageView)
         }
     }
 
@@ -281,6 +329,7 @@ class FirstFragment : Fragment() {
     private fun calculateScore() {
         //Calculates score from array of selected tiles
         var score = 0
+        var multiplier = 1
         //Reset score breakdown
         updateText(R.id.scorerDisplay, "Points scored by:")
 
@@ -395,13 +444,43 @@ class FirstFragment : Fragment() {
 
         }
 
-        updateTextNewline(R.id.scorerDisplay,"Unused tiles:"+ hand.toString())
+        //Check for flowers and seasons
+        for (i in 0 until flowerSeasonList.count()-1) {
+            val flowerSeasonType = extractSuit(flowerSeasonList[i])
+            val flowerSeasonNumber = extractNumber(flowerSeasonList[i])
+            if (flowerSeasonType=="flower"){
+                score += FLOWERPOINTS
+                val scorerText = getString(R.string.scorer, "flower", flowerSeasonNumber.toString())
+                updateTextNewline(R.id.scorerDisplay, scorerText)
+                if (flowerSeasonNumber==windOfPlayer){
+                    multiplier *= SAMEFLOWERMULTIPLIER
+                    val scorerText = getString(R.string.scorer, "player's flower", flowerSeasonNumber.toString())
+                    updateTextNewline(R.id.scorerDisplay, scorerText)
+                }
+            }else if(flowerSeasonType=="season"){
+                score += SEASONPOINTS
+                val scorerText = getString(R.string.scorer, "season", flowerSeasonNumber.toString())
+                updateTextNewline(R.id.scorerDisplay, scorerText)
+                if (flowerSeasonNumber==windOfPlayer){
+                    multiplier *= SAMESEASONMULTIPLIER
+                    val scorerText = getString(R.string.scorer, "player's season", flowerSeasonNumber.toString())
+                    updateTextNewline(R.id.scorerDisplay, scorerText)
+                }
+            }
+
+        }
+
+
+            updateTextNewline(R.id.scorerDisplay,"Unused tiles:"+ hand.toString())
 
 
         //CHECK FOR ALL 1s, 9s, all same suit -----------------------------------------
 
         //CHECK FOR MATCHING WINDS, FLOWERS, SEASONS -----------------------------------------
 
+
+
+        score *= multiplier
         //Update score
         val scoreText = getString(R.string.score, score)
         updateText(R.id.score_text,scoreText)
