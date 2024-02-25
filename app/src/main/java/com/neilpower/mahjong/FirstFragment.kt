@@ -15,15 +15,15 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//Update selection to 13
+//Split selection over two lines - swap from table to gridlayout/flexbox layout
 //Add actual score number to score display
 //Add text to tiles
 //set loop to fill table with tiles (last)
 //Make the graphics look good
 
 //Issues
+//Issue when clicking to remove 'empty' tile (& possibly any tile)
 //Issue with multiple chows of same suit - sorting issue (eg bamboo_1, bamboo_1, bamboo_2 ...)
-//Issue when clicking on empty tile
 //Doesn't add 1 tile if kong present
 
 
@@ -43,14 +43,17 @@ private const val WINDROUNDMULTIPLIER = 2
 private const val SAMESEASONMULTIPLIER = 2
 private const val SAMEFLOWERMULTIPLIER = 2
 
-private var selectedTileNumber = 0
-private var selectedTileList: MutableList<String> = ArrayList()
-private var flowerSeasonList: MutableList<String> = ArrayList()
-
 private val windNames = listOf("East","South","West","North")
 private val dragonNames = listOf("Red","Green","White")
 private val flowerNames = listOf("Spring","Summer","Autumn","Winter")
 private val seasonNames = listOf("Plum","Orchid","Chrysanthemum","Bamboo")
+
+private var selectedTileNumber = 0
+private var selectedTileList: MutableList<String> = ArrayList()
+private var flowerSeasonList: MutableList<String> = ArrayList()
+private var handSize = 14
+
+
 
 class FirstFragment : Fragment() {
 
@@ -75,10 +78,10 @@ class FirstFragment : Fragment() {
 
         //Calculate score
         binding.calculateScoreButton.setOnClickListener {
-            if (selectedTileList.count() == 11) {
+            if (selectedTileList.count() == handSize) {
                 calculateScore()
             } else {
-                updateText(R.id.score_text, "Select 11 tiles")
+                updateText(R.id.score_text, "Select "+handSize.toString()+"tiles")
             }
         }
 
