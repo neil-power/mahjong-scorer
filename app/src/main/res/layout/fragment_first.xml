@@ -858,6 +858,7 @@
                 android:id="@+id/round_1"
                 android:layout_width="wrap_content"
                 android:layout_height="15pt"
+                android:checked="true"
                 android:text="East" />
 
             <RadioButton
@@ -898,7 +899,7 @@
                 android:id="@+id/player_1"
                 android:layout_width="wrap_content"
                 android:layout_height="15pt"
-                android:checked="false"
+                android:checked="true"
                 android:text="East" />
 
             <RadioButton

@@ -15,15 +15,15 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//Update selection to 11
+//Update selection to 13
+//Add actual score number to score display
 //Add text to tiles
 //set loop to fill table with tiles (last)
+//Make the graphics look good
 
 //Issues
-//Clear doesn't clear selected flowers or seasons
 //Issue with multiple chows of same suit - sorting issue (eg bamboo_1, bamboo_1, bamboo_2 ...)
 //Issue when clicking on empty tile
-//Issue when calculating score if no winds are clicked
 //Doesn't add 1 tile if kong present
 
 
@@ -139,8 +139,6 @@ class FirstFragment : Fragment() {
                 (extractSuit(clickedTileName)=="season" && numAlreadySelected ==0) || //Only same season
                 ( (extractSuit(clickedTileName)!="flower" && (extractSuit(clickedTileName)!="season") && (numAlreadySelected <= 3) ) )){ //Max 4 of others
 
-
-
                 val tileToUpdate: ImageView = selectedTileRow.getChildAt(selectedTileNumber) as ImageView
                 tileToUpdate.setImageDrawable(tileClicked.drawable)
                 tileToUpdate.setBackgroundResource(R.drawable.tile_front)
@@ -219,7 +217,7 @@ class FirstFragment : Fragment() {
         val tileTable: TableLayout = requireView().findViewById(R.id.tile_selection)
         val flowerSeasonRow = tileTable.getChildAt(0) as TableRow
         for (i in 0 until flowerSeasonRow.childCount) {
-            val tileToClear = selectedTileRow.getChildAt(i) as ImageView
+            val tileToClear = flowerSeasonRow.getChildAt(i) as ImageView
             tileToClear.setBackgroundResource(R.drawable.tile_front)
         }
         flowerSeasonList.clear()
@@ -233,18 +231,11 @@ class FirstFragment : Fragment() {
 
         updateText(R.id.scorerDisplay, "Points scored by:")
 
-        //Reset winds - necessary?
-        val roundCheck: RadioGroup = requireView().findViewById(R.id.wind_round)
-        for (i in 1 until roundCheck.childCount) { //Note 1 to avoid textview
-            val radioButton = roundCheck.getChildAt(i) as RadioButton
-            radioButton.isChecked = false
-        }
-
-        val playerCheck: RadioGroup = requireView().findViewById(R.id.wind_player)
-        for (i in 1 until playerCheck.childCount) { //Note 1 to avoid textview
-            val radioButton = playerCheck.getChildAt(i) as RadioButton
-            radioButton.isChecked = false
-        }
+        //Select east winds
+        val eastPlayer: RadioButton = requireView().findViewById(R.id.round_1) as RadioButton
+        eastPlayer.isChecked = true
+        val eastRound: RadioButton = requireView().findViewById(R.id.player_1) as RadioButton
+        eastRound.isChecked = true
     }
 
     //UTILITY FUNCTIONS-----------------------------------------------------------------------------
