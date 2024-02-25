@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import com.neilpower.mahjong.databinding.FragmentFirstBinding
 
 //To do
-//Update selection
+//Update selection to 11
 //Add text to tiles
 //set loop to fill table with tiles (last)
 
@@ -24,6 +24,7 @@ import com.neilpower.mahjong.databinding.FragmentFirstBinding
 //Issue with multiple chows of same suit - sorting issue (eg bamboo_1, bamboo_1, bamboo_2 ...)
 //Issue when clicking on empty tile
 //Issue when calculating score if no winds are clicked
+//Doesn't add 1 tile if kong present
 
 
 //VARIABLES ---------------------------------------------------------------------------------
@@ -45,6 +46,11 @@ private const val SAMEFLOWERMULTIPLIER = 2
 private var selectedTileNumber = 0
 private var selectedTileList: MutableList<String> = ArrayList()
 private var flowerSeasonList: MutableList<String> = ArrayList()
+
+private val windNames = listOf("East","South","West","North")
+private val dragonNames = listOf("Red","Green","White")
+private val flowerNames = listOf("Spring","Summer","Autumn","Winter")
+private val seasonNames = listOf("Plum","Orchid","Chrysanthemum","Bamboo")
 
 class FirstFragment : Fragment() {
 
@@ -325,6 +331,24 @@ class FirstFragment : Fragment() {
         return null // No consecutive run of three found
     }
 
+    private fun updateScore(scoringType: String, tileName: String){
+        val tileSuit = extractSuit(tileName)
+        val tileNumber = extractNumber(tileName)
+        val tile: String = if (tileSuit == "wind"){
+            windNames[tileNumber-1]
+        } else if (tileSuit == "flower"){
+            flowerNames[tileNumber-1]
+        } else if (tileSuit == "season"){
+            seasonNames[tileNumber-1]
+        } else if (tileSuit == "dragon"){
+            dragonNames[tileNumber-1]
+        }else{
+            tileNumber.toString()
+        }
+        val scorerText = getString(R.string.scorer, scoringType, tile,tileSuit)
+        updateTextNewline(R.id.scorerDisplay, scorerText)
+    }
+
     //CALCULATING SCORE FUNCTIONS-------------------------------------------------------------------
     private fun calculateScore() {
         //Calculates score from array of selected tiles
@@ -368,8 +392,7 @@ class FirstFragment : Fragment() {
                     }else{
                         KONGPOINTS //STANDARD KONG
                     }
-                    val scorerText = getString(R.string.scorer, "kong", uniqueTile.key)
-                    updateTextNewline(R.id.scorerDisplay, scorerText)
+                    updateScore("kong",uniqueTile.key)
 
                     //Remove all tiles that are part of a kong
                     hand.removeAll(listOf(uniqueTile.key))
@@ -401,8 +424,8 @@ class FirstFragment : Fragment() {
                     }else{
                         PUNGPOINTS //STANDARD PUNG
                     }
-                    val scorerText = getString(R.string.scorer, "pung", uniqueTile.key)
-                    updateTextNewline(R.id.scorerDisplay, scorerText)
+
+                    updateScore("pung",uniqueTile.key)
 
                     //Remove all tiles that are part of a kong
                     hand.removeAll(listOf(uniqueTile.key))
@@ -421,8 +444,7 @@ class FirstFragment : Fragment() {
             val chowTile = hand.elementAt(firstChow[0])
 
             score += CHOWPOINTS
-            val scorerText = getString(R.string.scorer, "chow", extractSuit(chowTile))
-            updateTextNewline(R.id.scorerDisplay, scorerText)
+            updateScore("chow",chowTile)
 
             hand.subList(firstChow[0],firstChow[2]+1).clear() //Remove chow from hand
             //ISSUE WITH MULTIPLE CHOWS?
@@ -434,8 +456,7 @@ class FirstFragment : Fragment() {
 
         if (hand.count()==2 && countUniqueElements(hand).keys.count()==1){
             val pairTile = hand[0]
-            val scorerText = getString(R.string.scorer, "pair", pairTile)
-            updateTextNewline(R.id.scorerDisplay, scorerText)
+            updateScore("pair", pairTile)
 
             score += MAHJONGPOINTS
             updateTextNewline(R.id.scorerDisplay, "MAHJONG")
@@ -444,44 +465,35 @@ class FirstFragment : Fragment() {
 
         }
 
-        //Check for flowers and seasons
+        //CHECK FOR ALL 1s, 9s, all same suit -----------------------------------------
+
+        //CHECK FOR MATCHING WINDS, FLOWERS, SEASONS -----------------------------------------
         for (i in 0 until flowerSeasonList.count()-1) {
             val flowerSeasonType = extractSuit(flowerSeasonList[i])
             val flowerSeasonNumber = extractNumber(flowerSeasonList[i])
             if (flowerSeasonType=="flower"){
                 score += FLOWERPOINTS
-                val scorerText = getString(R.string.scorer, "flower", flowerSeasonNumber.toString())
-                updateTextNewline(R.id.scorerDisplay, scorerText)
+                updateScore("flower",flowerSeasonList[i])
                 if (flowerSeasonNumber==windOfPlayer){
                     multiplier *= SAMEFLOWERMULTIPLIER
-                    val scorerText = getString(R.string.scorer, "player's flower", flowerSeasonNumber.toString())
-                    updateTextNewline(R.id.scorerDisplay, scorerText)
+                    updateScore("player's flower",flowerSeasonList[i])
                 }
             }else if(flowerSeasonType=="season"){
                 score += SEASONPOINTS
-                val scorerText = getString(R.string.scorer, "season", flowerSeasonNumber.toString())
-                updateTextNewline(R.id.scorerDisplay, scorerText)
+                updateScore("season",flowerSeasonList[i])
                 if (flowerSeasonNumber==windOfPlayer){
                     multiplier *= SAMESEASONMULTIPLIER
-                    val scorerText = getString(R.string.scorer, "player's season", flowerSeasonNumber.toString())
-                    updateTextNewline(R.id.scorerDisplay, scorerText)
+                    updateScore("player's season",flowerSeasonList[i])
                 }
             }
 
         }
 
-
-            updateTextNewline(R.id.scorerDisplay,"Unused tiles:"+ hand.toString())
-
-
-        //CHECK FOR ALL 1s, 9s, all same suit -----------------------------------------
-
-        //CHECK FOR MATCHING WINDS, FLOWERS, SEASONS -----------------------------------------
-
-
+        updateTextNewline(R.id.scorerDisplay,"Unused tiles:"+ hand.toString())
 
         score *= multiplier
         //Update score
+
         val scoreText = getString(R.string.score, score)
         updateText(R.id.score_text,scoreText)
     }
