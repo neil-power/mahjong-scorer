@@ -235,9 +235,9 @@ class FirstFragment : Fragment() {
         updateText(R.id.scorerDisplay, "Points scored by:")
 
         //Select east winds
-        val eastPlayer: RadioButton = requireView().findViewById(R.id.round_1) as RadioButton
+        val eastPlayer: RadioButton = requireView().findViewById(R.id.round_1)
         eastPlayer.isChecked = true
-        val eastRound: RadioButton = requireView().findViewById(R.id.player_1) as RadioButton
+        val eastRound: RadioButton = requireView().findViewById(R.id.player_1)
         eastRound.isChecked = true
     }
 
@@ -328,16 +328,22 @@ class FirstFragment : Fragment() {
     private fun updateScore(scoringType: String, tileName: String){
         val tileSuit = extractSuit(tileName)
         val tileNumber = extractNumber(tileName)
-        val tile: String = if (tileSuit == "wind"){
-            windNames[tileNumber-1]
-        } else if (tileSuit == "flower"){
-            flowerNames[tileNumber-1]
-        } else if (tileSuit == "season"){
-            seasonNames[tileNumber-1]
-        } else if (tileSuit == "dragon"){
-            dragonNames[tileNumber-1]
-        }else{
-            tileNumber.toString()
+        val tile: String = when (tileSuit) {
+            "wind" -> {
+                windNames[tileNumber-1]
+            }
+            "flower" -> {
+                flowerNames[tileNumber-1]
+            }
+            "season" -> {
+                seasonNames[tileNumber-1]
+            }
+            "dragon" -> {
+                dragonNames[tileNumber-1]
+            }
+            else -> {
+                tileNumber.toString()
+            }
         }
         val scorerText = getString(R.string.scorer, scoringType, tile,tileSuit)
         updateTextNewline(R.id.scorerDisplay, scorerText)
